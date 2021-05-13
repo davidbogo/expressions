@@ -17,4 +17,34 @@ public abstract class BaseExpression implements Expression {
         }
         return combinedVarList;
     }
+
+    protected static Boolean hasBrackets(String operandString) {
+        Boolean hasBrackets = false;
+        int operandStringLen = operandString.length();
+        if (operandStringLen > 2) {
+            if (operandString.charAt(0) == '(') {
+                int missingClosingBrackets = 1;
+                for (int curChar = 1; curChar < operandStringLen; curChar++) {
+                    if (operandString.charAt(curChar) == ')') {
+                        missingClosingBrackets--;
+                        if (missingClosingBrackets == 0) {
+                            if (curChar == operandStringLen - 1) {
+                                // This is the closing bracket matching the first opening one,
+                                // and we're at the end of the expression. This means we have brackets
+                                // around the whole expression
+                                hasBrackets = true;
+                            }
+                            // Even if this is not the end of the expression, we'll break the loop anyway.
+                            // hasBrackets will remain false
+                            break;
+                        }
+                    } else if (operandString.charAt(curChar) == '(') {
+                        missingClosingBrackets++;
+                    }
+                }
+            }
+        }
+
+        return hasBrackets;
+    }
 }
