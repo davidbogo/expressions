@@ -35,10 +35,10 @@ public class Var implements Expression {
     // current expression).
     public Expression assign(String var, Expression expression) {
         if (var == varName) {
-            return expression.assign("",expression);
+            return expression.assign("", null);
             // We just want to create a clone of the assigned expression,
             // with no recursive substitution, so we pass an empty string
-            // for the variable name
+            // and an empty expression for parameters
         }
         return new Var(varName);
     }
