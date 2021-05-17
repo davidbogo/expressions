@@ -17,7 +17,7 @@ public class Nor extends BinaryExpression {
 
     // Returns a nice string representation of the expression.
     public String toString() {
-        return toString("↓");
+        return toString("V");
     }
 
     // Returns a new expression in which all occurrences of the variable
@@ -25,5 +25,51 @@ public class Nor extends BinaryExpression {
     // current expression).
     public Expression assign(String var, Expression expression) {
         return new Nor(expression1.assign(var, expression), expression2.assign(var, expression));
+    }
+
+    // Returns the expression tree resulting from converting all the operations to the logical Nand operation.
+    public Expression nandify() {
+        return new Nand((new Nand((new Nand(expression1.nandify(), expression1.nandify())),
+                (new Nand(expression2.nandify(), expression2.nandify())))),
+                (new Nand((new Nand(expression1.nandify(), expression1.nandify())),
+                        (new Nand(expression2.nandify(), expression2).nandify()))));
+    }
+
+    // Returns the expression tree resulting from converting all the operations to the logical Nor operation.
+    public Expression norify() {
+        return this;
+    }
+
+    public Expression simplify() {
+        Expression simplifiedExpression1 = expression1.simplify().assign("", null);  // create a clone;
+        Expression simplifiedExpression2 = expression2.simplify().assign("", null);  // create a clone;
+        int evaluation1 = simplifiedExpression1.safeEvaluate();
+        int evaluation2 = simplifiedExpression2.safeEvaluate();
+        if (evaluation1 == 0 && evaluation2 == 2) {
+            return new Not(simplifiedExpression2);
+        }
+        if (evaluation1 == 2 && evaluation2 == 0) {
+            return new Not(simplifiedExpression1);
+        }
+        if ((evaluation1 == 1 && evaluation2 == 2) || (evaluation1 == 2 && evaluation2 == 1)){
+            return new Val(false);
+        }
+        if (evaluation1 == 1 && evaluation2 == 1) {
+            return new Val(false);
+        }
+        if (evaluation1 == 0 && evaluation2 == 0) {
+            return new Val(true);
+        }
+        if ((evaluation1 == 1 && evaluation2 == 0) || (evaluation1 == 0 && evaluation2 == 1)) {
+            return new Val(false);
+        }
+
+        // None of the expressions could be evaluated, evaluation1 == 2 && evaluation2 == 2
+        String string1 = simplifiedExpression1.toString();
+        String string2 = simplifiedExpression2.toString();
+        if (string1.equals(string2)) {
+            return new Not(simplifiedExpression1);
+        }
+        return new Nor(simplifiedExpression1, simplifiedExpression2);
     }
 }

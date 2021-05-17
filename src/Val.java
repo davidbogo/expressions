@@ -35,4 +35,20 @@ public class Val implements Expression {
     public Expression assign(String var, Expression expression) {
         return new Val(value);
     }
+
+    public Expression nandify() {
+        return new Val(value);
+    }
+
+    public Expression norify() {
+        return new Val(value);
+    }
+
+    public Expression simplify() {
+        return new Val(value);
+    }
+
+    public int safeEvaluate() {
+        return  value ? 1 : 0;
+    }
 }

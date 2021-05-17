@@ -42,4 +42,20 @@ public class Var implements Expression {
         }
         return new Var(varName);
     }
+
+    public Expression nandify() {
+        return new Var(varName);
+    }
+
+    public Expression norify() {
+        return new Var(varName);
+    }
+
+    public Expression simplify() {
+        return new Var(varName);
+    }
+
+    public int safeEvaluate() {
+        return 2;  // Cannot evaluate
+    }
 }

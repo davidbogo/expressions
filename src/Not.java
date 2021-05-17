@@ -26,4 +26,18 @@ public class Not extends UnaryExpression {
     public Expression assign(String var, Expression expression) {
         return new Not(theExpression.assign(var, expression));
     }
+
+    // Returns the expression tree resulting from converting all the operations to the logical Nand operation.
+    public Expression nandify() {
+        return new Nand(theExpression.nandify(), theExpression.nandify());
+    }
+
+    // Returns the expression tree resulting from converting all the operations to the logical Nor operation.
+    public Expression norify() {
+        return new Nor(theExpression.norify(), theExpression.norify());
+    }
+
+    public Expression simplify() {
+        return null;
+    }
 }

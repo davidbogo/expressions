@@ -24,4 +24,47 @@ public class And extends BinaryExpression {
     public Expression assign(String var, Expression expression) {
         return new And(expression1.assign(var, expression), expression2.assign(var, expression));
     }
+
+    // Returns the expression tree resulting from converting all the operations to the logical Nand operation.
+    public Expression nandify() {
+        return new Nand((new Nand(expression1.nandify(), expression2.nandify())),
+                (new Nand(expression1.nandify(), expression2.nandify())));
+    }
+
+    // Returns the expression tree resulting from converting all the operations to the logical Nor operation.
+    public Expression norify() {
+        return new Nor((new Nor(expression1.norify(), expression1.norify())),
+                (new Nor(expression2.norify(), expression2.norify())));
+    }
+
+    public Expression simplify() {
+        Expression simplifiedExpression1 = expression1.simplify().assign("", null);  // create a clone;
+        Expression simplifiedExpression2 = expression2.simplify().assign("", null);  // create a clone;
+        int evaluation1 = simplifiedExpression1.safeEvaluate();
+        int evaluation2 = simplifiedExpression2.safeEvaluate();
+        if (evaluation1 == 0 && evaluation2 == 2) {
+            return simplifiedExpression2;
+        }
+        if (evaluation1 == 2 && evaluation2 == 0) {
+            return simplifiedExpression1;
+        }
+        if (evaluation1 == 1 && evaluation2 == 2) {
+            return new Not(simplifiedExpression2);
+        }
+        if (evaluation1 == 2 && evaluation2 == 1) {
+            return new Not(simplifiedExpression1);
+        }
+        if (evaluation1 == 1 && evaluation2 == 1) {
+            return new Val(true);
+        }
+        if (evaluation1 == 0 && evaluation2 == 0) {
+            return new Val(false);
+        }
+        if ((evaluation1 == 1 && evaluation2 == 0) || (evaluation1 == 0 && evaluation2 == 1)) {
+            return new Val(false);
+        }
+
+        // None of the expressions could be evaluated, evaluation1 == 2 && evaluation2 == 2
+        return new And(simplifiedExpression1, simplifiedExpression2);
+    }
 }

@@ -22,4 +22,20 @@ public interface Expression {
     // var are replaced with the provided expression (Does not modify the
     // current expression).
     Expression assign(String var, Expression expression);
+
+    // Returns the expression tree resulting from converting all the operations to the logical Nand operation.
+    Expression nandify();
+
+    // Returns the expression tree resulting from converting all the operations to the logical Nor operation.
+    Expression norify();
+
+    // Returned a simplified version of the current expression.
+    Expression simplify();
+
+    // Similar to evaluate, only it never never throws an exception. I use it for expression
+    // simplification. The function returns:
+    //   0 if the expression evaluates to false
+    //   1 if it evaluates to true
+    //   2 if the expression contains variables an cannot be evaluated
+    int safeEvaluate();
 }

@@ -62,5 +62,17 @@ public class ExpressionsTest {
         s = e5.toString();
         // This demonstrates that we can add brackets around unary expressions that don't already have them
         System.out.println(s);
+
+        Expression e11 = new Xor((new And((new Var("z")), (new Var("x")))), (new Var("y")));
+        System.out.println(e11.nandify());
+        System.out.println(e11.norify());
+
+        Expression e = new Xor(new And(new Var("x"), new Val(false)), new Or(new Var("y"), new Val(false)));
+        System.out.println(e);
+// the result is:
+// ((x & F) ^ (y | F))
+        System.out.println(e.simplify());
+// the result is:
+// (x ^ y)
     }
 }
